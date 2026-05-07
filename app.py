@@ -4,6 +4,10 @@ import os
 import aws_cdk as cdk
 
 from stacks.crucible_main_stack import CrucibleMainStack
+from stacks.app_stack import AppStack
+from stacks.chaos_stack import ChaosStack
+from stacks.medic_stack import MedicStack
+from stacks.observability_stack import ObservabilityStack
 
 
 app = cdk.App()
