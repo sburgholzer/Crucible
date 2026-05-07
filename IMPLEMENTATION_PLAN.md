@@ -16,10 +16,9 @@ Multi-region resilience playground + AI on-call medic.
   - [x] Add GitHub Actions workflow: lint → cdk-nag → cdk synth → deploy
   - [x] Add Infracost integration for PR cost comments
 
-- [ ] **Configure cost guardrails**
-  - [ ] Create AWS Budget ($50/mo hard cap)
-  - [ ] Wire EventBridge rule → Lambda to disable chaos-api on budget breach
-  - [ ] Tag all resources with `Project=Crucible` for cost tracking
+- [x] **Configure cost guardrails**
+  - [x] Create AWS Budget ($50/mo hard cap)
+  - [x] Tag all resources with `Project=Crucible` for cost tracking
 
 - [ ] **IAM foundation**
   - [ ] Design least-privilege roles per stack
@@ -105,6 +104,9 @@ Multi-region resilience playground + AI on-call medic.
 - [ ] **Lambda — reset**
   - [ ] Rolls back all chaos: reset SSM params, stop FIS experiments
   - [ ] Wired to "Reset" button in SPA
+
+- [ ] **Budget auto-disable**
+  - [ ] Wire EventBridge rule → Lambda to disable chaos-api on budget breach
 
 ---
 

@@ -18,6 +18,9 @@ app = cdk.App()
 if os.getenv("CDK_NAG_ENABLED"):
     cdk.Aspects.of(app).add(cdk_nag.AwsSolutionsChecks(verbose=True))
 
+# Tag everything in the app with Project=Crucible
+cdk.Tags.of(app).add("Project", "Crucible")
+
 ACCOUNT = os.getenv("CDK_DEFAULT_ACCOUNT", "123456789012")
 
 env_east = cdk.Environment(account=ACCOUNT, region="us-east-1")
