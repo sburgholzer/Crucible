@@ -48,3 +48,13 @@ That's it — the workflow handles the rest.
 - `events:PutEvents` — only to `crucible-*` event buses
 
 This means even if the chaos Lambda is misconfigured, it physically cannot touch resources outside the Crucible project.
+
+## CDK Nag
+
+We run [cdk-nag](https://github.com/cdklabs/cdk-nag) (AwsSolutions pack) in CI on every PR. It caught several issues early:
+
+- **SNS topic without SSL enforcement** — fixed by adding `enforce_ssl=True`, which attaches a resource policy requiring HTTPS for publishers.
+- **AWS managed policy on the chaos role** — replaced `AWSLambdaBasicExecutionRole` with inline log permissions scoped to `crucible-*` log groups. Tighter and auditable.
+- **Wildcard resources in IAM** — these are intentional (multi-region SSM paths, tag-conditioned FIS, prefixed EventBridge buses). We suppress with documented justification via `NagSuppressions` rather than removing the wildcards.
+
+The pattern: fix what you can, suppress what's intentional with a written reason. Suppressions live next to the code they apply to so reviewers can evaluate the tradeoff.

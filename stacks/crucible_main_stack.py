@@ -6,6 +6,7 @@ from aws_cdk import (
     aws_sns_subscriptions as subs,  # noqa: F401
 )
 from constructs import Construct
+import cdk_nag
 
 
 class CrucibleMainStack(Stack):
@@ -18,6 +19,7 @@ class CrucibleMainStack(Stack):
         # SNS topic for budget alerts
         budget_topic = sns.Topic(self, "BudgetAlertTopic",
             display_name="Crucible Budget Alerts",
+            enforce_ssl=True,
         )
 
         # Optional: add your email for notifications
@@ -115,7 +117,31 @@ class CrucibleMainStack(Stack):
             ],
         ))
 
-        # Basic Lambda execution (logs)
-        self.chaos_trigger_role.add_managed_policy(
-            iam.ManagedPolicy.from_aws_managed_policy_name("service-role/AWSLambdaBasicExecutionRole")
+        # Inline log permissions instead of AWS managed policy (satisfies AwsSolutions-IAM4)
+        self.chaos_trigger_role.add_to_policy(iam.PolicyStatement(
+            sid="LambdaLogging",
+            actions=[
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+            ],
+            resources=[
+                f"arn:aws:logs:*:{self.account}:log-group:/aws/lambda/crucible-*",
+            ],
+        ))
+
+        # --- cdk-nag suppressions for intentional wildcards ---
+        cdk_nag.NagSuppressions.add_resource_suppressions(
+            self.chaos_trigger_role,
+            suppressions=[
+                cdk_nag.NagPackSuppression(
+                    id="AwsSolutions-IAM5",
+                    reason="SSM wildcard scoped to /crucible/* path prefix. "
+                           "FIS wildcard is constrained by aws:ResourceTag/Project=Crucible condition. "
+                           "EventBridge wildcard scoped to crucible-* bus names. "
+                           "Logs wildcard scoped to /aws/lambda/crucible-* log groups. "
+                           "All wildcards are bounded to project resources only.",
+                ),
+            ],
+            apply_to_children=True,
         )
