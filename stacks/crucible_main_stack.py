@@ -1,6 +1,7 @@
 from aws_cdk import (
     Stack,
     aws_budgets as budgets,
+    aws_iam as iam,
     aws_sns as sns,
     aws_sns_subscriptions as subs,
 )
@@ -66,4 +67,55 @@ class CrucibleMainStack(Stack):
                     ],
                 ),
             ],
+        )
+
+        # --- IAM Foundation ---
+
+        # Role for chaos operations — tightly scoped blast radius
+        self.chaos_trigger_role = iam.Role(self, "ChaosTriggerRole",
+            role_name="crucible-chaos-trigger",
+            assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
+            description="Used by trigger-fis Lambda and FIS experiments. Scoped to /crucible/* and Project=Crucible tagged resources only.",
+        )
+
+        # Allow SSM parameter writes only under /crucible/*
+        self.chaos_trigger_role.add_to_policy(iam.PolicyStatement(
+            sid="SSMCrucibleOnly",
+            actions=[
+                "ssm:PutParameter",
+                "ssm:GetParameter",
+            ],
+            resources=[
+                f"arn:aws:ssm:*:{self.account}:parameter/crucible/*",
+            ],
+        ))
+
+        # Allow starting FIS experiments only on Crucible-tagged resources
+        self.chaos_trigger_role.add_to_policy(iam.PolicyStatement(
+            sid="FISStartExperiment",
+            actions=[
+                "fis:StartExperiment",
+                "fis:GetExperiment",
+                "fis:ListExperiments",
+            ],
+            resources=["*"],
+            conditions={
+                "StringEquals": {
+                    "aws:ResourceTag/Project": "Crucible",
+                },
+            },
+        ))
+
+        # Allow publishing to EventBridge (for ground-truth events)
+        self.chaos_trigger_role.add_to_policy(iam.PolicyStatement(
+            sid="EventBridgePublish",
+            actions=["events:PutEvents"],
+            resources=[
+                f"arn:aws:events:*:{self.account}:event-bus/crucible-*",
+            ],
+        ))
+
+        # Basic Lambda execution (logs)
+        self.chaos_trigger_role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("service-role/AWSLambdaBasicExecutionRole")
         )

@@ -36,3 +36,15 @@ Infracost posts a cost breakdown comment on every PR so you can see the dollar i
 2. Add it as a GitHub repo secret: **Settings → Secrets → Actions → `INFRACOST_API_KEY`**
 
 That's it — the workflow handles the rest.
+
+## IAM Strategy
+
+**Least-privilege by default.** CDK generates scoped IAM roles automatically when you use grant methods (e.g. `table.grant_read_write_data(fn)`). Each stack's resources get their own narrowly-scoped roles — no shared "god" roles.
+
+**`crucible-chaos-trigger` role** (defined in `CrucibleMainStack`) is the security boundary for chaos operations:
+
+- `ssm:PutParameter` / `ssm:GetParameter` — only on `parameter/crucible/*`
+- `fis:StartExperiment` — only on resources tagged `Project=Crucible`
+- `events:PutEvents` — only to `crucible-*` event buses
+
+This means even if the chaos Lambda is misconfigured, it physically cannot touch resources outside the Crucible project.

@@ -20,9 +20,9 @@ Multi-region resilience playground + AI on-call medic.
   - [x] Create AWS Budget ($50/mo hard cap)
   - [x] Tag all resources with `Project=Crucible` for cost tracking
 
-- [ ] **IAM foundation**
-  - [ ] Design least-privilege roles per stack
-  - [ ] Create `chaos-trigger` role scoped to `arn:...:parameter/crucible/*` and FIS actions on `Project=Crucible` tagged resources only
+- [x] **IAM foundation**
+  - [ ] Design least-privilege roles per stack (happens naturally as we build, cdk creates scoped roles automatically)
+  - [x] Create `chaos-trigger` role scoped to `arn:...:parameter/crucible/*` and FIS actions on `Project=Crucible` tagged resources only
 
 ---
 
