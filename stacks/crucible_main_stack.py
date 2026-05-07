@@ -3,7 +3,7 @@ from aws_cdk import (
     aws_budgets as budgets,
     aws_iam as iam,
     aws_sns as sns,
-    aws_sns_subscriptions as subs,
+    aws_sns_subscriptions as subs,  # noqa: F401
 )
 from constructs import Construct
 

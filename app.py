@@ -6,10 +6,10 @@ import cdk_nag
 
 from stacks.crucible_main_stack import CrucibleMainStack
 from stacks.app_stack import AppStack
-from stacks.network_stack import NetworkStack
+# from stacks.network_stack import NetworkStack
 from stacks.chaos_stack import ChaosStack
-from stacks.medic_stack import MedicStack
-from stacks.observability_stack import ObservabilityStack
+# from stacks.medic_stack import MedicStack
+# from stacks.observability_stack import ObservabilityStack
 
 
 app = cdk.App()
@@ -25,6 +25,9 @@ ACCOUNT = os.getenv("CDK_DEFAULT_ACCOUNT", "123456789012")
 
 env_east = cdk.Environment(account=ACCOUNT, region="us-east-1")
 env_west = cdk.Environment(account=ACCOUNT, region="us-west-2")
+
+# Global resources (budget, IAM, Route 53, DDB Global Table)
+CrucibleMainStack(app, "CrucibleMain", env=env_east)
 
 # Deploy the same app stack to both regions
 app_east = AppStack(app, "CrucibleApp-East", env=env_east)
