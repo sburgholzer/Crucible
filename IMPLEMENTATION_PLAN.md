@@ -11,10 +11,10 @@ Multi-region resilience playground + AI on-call medic.
   - [x] Set up multi-stack structure: `NetworkStack`, `AppStack`, `ObservabilityStack`, `ChaosStack`, `MedicStack`
   - [x] Configure CDK for multi-region deployment (us-east-1, us-west-2)
 
-- [ ] **Set up CI/CD**
-  - [ ] Create GitHub repo
-  - [ ] Add GitHub Actions workflow: lint → cdk-nag → cdk synth → deploy
-  - [ ] Add Infracost integration for PR cost comments
+- [x] **Set up CI/CD**
+  - [x] Create GitHub repo
+  - [x] Add GitHub Actions workflow: lint → cdk-nag → cdk synth → deploy
+  - [x] Add Infracost integration for PR cost comments
 
 - [ ] **Configure cost guardrails**
   - [ ] Create AWS Budget ($50/mo hard cap)

@@ -22,3 +22,17 @@ Add to your shell profile (`.bashrc` / `.zshrc`) to make it permanent.
 ## Naming
 
 The AI diagnosis component is called **Medic** (not "Copilot"). The original architecture used "copilot" but we renamed it to avoid confusion with Microsoft's Copilot branding. "Medic" fits the theme better anyway — chaos breaks things, the medic diagnoses what went wrong.
+
+## CI/CD
+
+GitHub Actions runs on every PR:
+- **Lint** (ruff) → **CDK Synth** → **CDK Nag** (AWS best practice checks) → **Infracost** (cost estimate comment)
+
+### Infracost setup
+
+Infracost posts a cost breakdown comment on every PR so you can see the dollar impact of infrastructure changes before merging.
+
+1. Get a free API key at [infracost.io](https://www.infracost.io/)
+2. Add it as a GitHub repo secret: **Settings → Secrets → Actions → `INFRACOST_API_KEY`**
+
+That's it — the workflow handles the rest.
