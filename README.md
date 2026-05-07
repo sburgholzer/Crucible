@@ -18,3 +18,7 @@ export JSII_SILENCE_WARNING_UNTESTED_NODE_VERSION=1
 ```
 
 Add to your shell profile (`.bashrc` / `.zshrc`) to make it permanent.
+
+## Naming
+
+The AI diagnosis component is called **Medic** (not "Copilot"). The original architecture used "copilot" but we renamed it to avoid confusion with Microsoft's Copilot branding. "Medic" fits the theme better anyway — chaos breaks things, the medic diagnoses what went wrong.

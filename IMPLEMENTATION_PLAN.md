@@ -6,10 +6,10 @@ Multi-region resilience playground + AI on-call medic.
 
 ## Phase 1: Foundation & Project Setup
 
-- [ ] **Initialize CDK project**
+- [X] **Initialize CDK project**
   - [x] `npx cdk init app --language python`
   - [x] Set up multi-stack structure: `NetworkStack`, `AppStack`, `ObservabilityStack`, `ChaosStack`, `MedicStack`
-  - [ ] Configure CDK for multi-region deployment (us-east-1, us-west-2)
+  - [x] Configure CDK for multi-region deployment (us-east-1, us-west-2)
 
 - [ ] **Set up CI/CD**
   - [ ] Create GitHub repo

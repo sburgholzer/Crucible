@@ -11,22 +11,17 @@ from stacks.observability_stack import ObservabilityStack
 
 
 app = cdk.App()
-CrucibleMainStack(app, "CrucibleMainStack",
-    # If you don't specify 'env', this stack will be environment-agnostic.
-    # Account/Region-dependent features and context lookups will not work,
-    # but a single synthesized template can be deployed anywhere.
 
-    # Uncomment the next line to specialize this stack for the AWS Account
-    # and Region that are implied by the current CLI configuration.
+ACCOUNT = os.getenv("CDK_DEFAULT_ACCOUNT", "123456789012")
 
-    #env=cdk.Environment(account=os.getenv('CDK_DEFAULT_ACCOUNT'), region=os.getenv('CDK_DEFAULT_REGION')),
+env_east = cdk.Environment(account=ACCOUNT, region="us-east-1")
+env_east = cdk.Environment(account=ACCOUNT, region="us-east-1")
 
-    # Uncomment the next line if you know exactly what Account and Region you
-    # want to deploy the stack to. */
+# Deploy the same app stack to both regions
+app_east = AppStack(app, "CrucibleApp-East", env=env_east)
+app_west = AppStack(app, "CrucibleApp-West", env=env_west)
 
-    #env=cdk.Environment(account='123456789012', region='us-east-1'),
-
-    # For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html
-    )
+# Chaos control plane only needs one region
+ChaosStack(app, "CrucibleChaos", env=env_east)
 
 app.synth()
